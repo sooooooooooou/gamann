@@ -1,0 +1,1767 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🔥 超強化版禁欲チャレンジ 🔥</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * { box-sizing: border-box; }
+        
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Noto Sans JP', sans-serif;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ddd;
+            overflow-y: auto;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1em;
+        }
+
+        /* ヘッダー */
+        .header {
+            text-align: center;
+            position: relative;
+            margin-bottom: 2em;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin: 0.5em 0;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes glow {
+            from { filter: drop-shadow(0 0 5px rgba(255, 107, 107, 0.3)); }
+            to { filter: drop-shadow(0 0 20px rgba(255, 107, 107, 0.6)); }
+        }
+
+        /* テーマトグル */
+        .theme-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 0.5em 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        /* カード共通スタイル */
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 1.5em;
+            margin: 1em 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 48px rgba(0, 0, 0, 0.4);
+        }
+
+        /* レベルシステム */
+        .level-section {
+            text-align: center;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .level-display {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 0.5em;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1em 0;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: linear-gradient(90deg, #feca57, #ff9ff3);
+            border-radius: 10px;
+            transition: width 1s ease;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* 統計グリッド */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1em;
+            margin: 1em 0;
+        }
+
+        .stat-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 1.5em;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .stat-card:hover::before {
+            left: 100%;
+        }
+
+        .stat-value {
+            font-size: 2.5em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            opacity: 0.8;
+            margin-top: 0.5em;
+        }
+
+        /* 実績システム */
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 1em;
+            margin: 1em 0;
+        }
+
+        .achievement {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 1em;
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .achievement.unlocked {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+
+        .achievement-icon {
+            font-size: 2em;
+            margin-bottom: 0.5em;
+        }
+
+        .achievement-title {
+            font-size: 0.8em;
+            font-weight: bold;
+        }
+
+        /* ボタン */
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 25px;
+            padding: 0.8em 1.5em;
+            color: white;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: bold;
+            transition: all 0.3s ease;
+            margin: 0.3em;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(-1px);
+        }
+
+        .btn.primary {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            font-size: 1.2em;
+            padding: 1em 2em;
+        }
+
+        /* 日記セクション */
+        .journal-entry {
+            width: 100%;
+            min-height: 100px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1em;
+            color: #ddd;
+            font-family: inherit;
+            resize: vertical;
+        }
+
+        /* 緊急サポート */
+        .emergency-section {
+            background: linear-gradient(135deg, #ff4757, #ff3838);
+            text-align: center;
+            animation: emergencyPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes emergencyPulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .emergency-section.hidden {
+            display: none;
+        }
+
+        /* カレンダー強化 */
+        .calendar {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .calendar table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1em 0;
+        }
+
+        .calendar th,
+        .calendar td {
+            padding: 1em;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .calendar td:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .calendar .achieved {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            font-weight: bold;
+        }
+
+        .calendar .today {
+            border: 3px solid #667eea;
+            box-shadow: 0 0 15px rgba(102, 126, 234, 0.5);
+        }
+
+        /* 名言表示 */
+        .quote-section {
+            background: linear-gradient(135deg, #5f27cd, #341f97);
+            text-align: center;
+            font-style: italic;
+            position: relative;
+        }
+
+        .quote-text {
+            font-size: 1.2em;
+            margin-bottom: 0.5em;
+        }
+
+        .quote-author {
+            opacity: 0.8;
+            font-size: 0.9em;
+        }
+
+        /* チャート */
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin: 1em 0;
+        }
+
+        /* アニメーション */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* モバイル対応 */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2em; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .achievements-grid { grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); }
+            .theme-toggle { position: relative; margin: 1em 0; }
+        }
+
+        /* ライトモード */
+        body.light-mode {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            color: #333;
+        }
+
+        body.light-mode .card {
+            background: rgba(255, 255, 255, 0.9);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        body.light-mode .xp-bar {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .xp-progress {
+            background: linear-gradient(90deg, #feca57, #ff9ff3); /* 同じグラデーションを維持 */
+        }
+
+        body.light-mode .calendar th,
+        body.light-mode .calendar td {
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        body.light-mode .calendar td:hover {
+            background: rgba(0, 0, 0, 0.05);
+        }
+
+        body.light-mode .journal-entry,
+        body.light-mode #addActivityInput {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        body.light-mode #activitiesList div {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        body.light-mode .chart-container canvas {
+            background-color: rgba(255, 255, 255, 0.8); /* チャート背景も明るく */
+            border-radius: 15px;
+        }
+
+        /* タブシステム */
+        .tabs {
+            display: flex;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2em;
+            overflow-x: auto;
+        }
+
+        body.light-mode .tabs {
+            border-bottom-color: rgba(0, 0, 0, 0.1);
+        }
+
+        .tab {
+            padding: 1em 2em;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            border-bottom-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        body.light-mode .tab.active {
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        /* カスタムモーダル */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: #2a2a4a;
+            border-radius: 15px;
+            padding: 2em;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            color: #ddd;
+            transform: translateY(-20px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-content h3 {
+            margin-top: 0;
+            color: #feca57;
+        }
+
+        .modal-content p {
+            margin-bottom: 1.5em;
+        }
+
+        .modal-buttons button {
+            margin: 0 0.5em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <h1>🔥 超強化版禁欲チャレンジ 🔥</h1>
+            <button class="theme-toggle" id="themeToggle">🌓 テーマ切替</button>
+        </div>
+
+        <!-- レベルシステム -->
+        <div class="card level-section">
+            <div class="level-display">レベル <span id="userLevel">1</span></div>
+            <div>経験値: <span id="currentXP">0</span> / <span id="maxXP">100</span></div>
+            <div class="xp-bar">
+                <div class="xp-progress" id="xpProgress"></div>
+            </div>
+            <div id="levelTitle">初心者</div>
+        </div>
+
+        <!-- 今日の名言 -->
+        <div class="card quote-section" id="quoteSection">
+            <div class="quote-text" id="quoteText"></div>
+            <div class="quote-author" id="quoteAuthor"></div>
+        </div>
+
+        <!-- タブナビゲーション -->
+        <div class="tabs">
+            <div class="tab active" data-tab="dashboard">📊 ダッシュボード</div>
+            <div class="tab" data-tab="calendar">📅 カレンダー</div>
+            <div class="tab" data-tab="achievements">🏆 実績</div>
+            <div class="tab" data-tab="journal">📔 日記</div>
+            <div class="tab" data-tab="activities">💡 代替活動</div>
+            <div class="tab" data-tab="analytics">📈 分析</div>
+            <div class="tab" data-tab="settings">⚙️ 設定</div>
+        </div>
+
+        <!-- ダッシュボードタブ -->
+        <div class="tab-content active" id="dashboard">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="currentStreak">0</div>
+                    <div class="stat-label">現在のストリーク</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="longestStreak">0</div>
+                    <div class="stat-label">最長記録</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalDays">0</div>
+                    <div class="stat-label">総成功日数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="successRate">0</div>
+                    <div class="stat-label">成功率 (%)</div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin: 2em 0;">
+                <button class="btn primary" id="markSuccessBtn">✅ 今日達成！</button>
+                <button class="btn" id="emergencyBtn">🚨 緊急サポート</button>
+            </div>
+
+            <div class="card emergency-section hidden" id="emergencySection">
+                <h2>🚨 緊急サポート 🚨</h2>
+                <p>深呼吸して、なぜここまで頑張ってきたのか思い出してください。</p>
+                <button class="btn" id="breathingBtn">🫁 深呼吸ガイド</button>
+                <button class="btn" id="motivationBtn">💪 モチベーション補給</button>
+                <button class="btn" id="distractionBtn">🎯 気分転換</button>
+            </div>
+
+            <div id="congratsMessage" class="card" style="display: none; background: linear-gradient(135deg, #00b894, #55a3ff); text-align: center;"></div>
+        </div>
+
+        <!-- カレンダータブ -->
+        <div class="tab-content" id="calendar">
+            <div class="card calendar">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1em;">
+                    <button class="btn" id="prevMonth">← 前月</button>
+                    <h2 id="monthYear"></h2>
+                    <button class="btn" id="nextMonth">次月 →</button>
+                </div>
+                <table id="calendarTable"></table>
+            </div>
+        </div>
+
+        <!-- 実績タブ -->
+        <div class="tab-content" id="achievements">
+            <div class="card">
+                <h2>🏆 実績システム</h2>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+        </div>
+
+        <!-- 日記タブ -->
+        <div class="tab-content" id="journal">
+            <div class="card">
+                <h2>📔 今日の日記</h2>
+                <textarea class="journal-entry" id="journalEntry" placeholder="今日はどんな一日でしたか？感じたことや学んだことを記録してください..."></textarea>
+                <div style="text-align: center; margin-top: 1em;">
+                    <button class="btn" id="saveJournalBtn">💾 保存</button>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h3>📚 過去の日記</h3>
+                <div id="journalHistory"></div>
+            </div>
+        </div>
+
+        <!-- 代替活動タブ -->
+        <div class="tab-content" id="activities">
+            <div class="card">
+                <h2>💡 代わりにやることリスト</h2>
+                <div style="margin: 1em 0;">
+                    <input type="text" id="addActivityInput" placeholder="新しい活動を追加..." 
+                            style="width: 70%; padding: 0.8em; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #ddd;">
+                    <button class="btn" id="addActivityBtn">➕ 追加</button>
+                </div>
+                <div id="activitiesList"></div>
+            </div>
+        </div>
+
+        <!-- 分析タブ -->
+        <div class="tab-content" id="analytics">
+            <div class="card">
+                <h2>📈 成功率分析</h2>
+                <div class="chart-container">
+                    <canvas id="monthlyChart"></canvas>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2>📊 曜日別成功率</h2>
+                <div class="chart-container">
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- 設定タブ -->
+        <div class="tab-content" id="settings">
+            <div class="card">
+                <h2>⚙️ 設定</h2>
+                <div style="margin: 1em 0;">
+                    <label>
+                        <input type="checkbox" id="enableNotifications"> 通知を有効にする
+                    </label>
+                </div>
+                <div style="margin: 1em 0;">
+                    <label>
+                        目標日数: <input type="number" id="goalDays" value="30" min="1" style="width: 80px; padding: 0.5em; border-radius: 5px; border: 1px solid rgba(255,255,255,0.2); background: rgba(255,255,255,0.05); color: #ddd;">
+                    </label>
+                </div>
+                <div style="text-align: center; margin-top: 2em;">
+                    <button class="btn" id="exportBtn">💾 データエクスポート</button>
+                    <button class="btn" id="importBtn">📂 データインポート</button>
+                    <button class="btn" id="resetBtn" style="background: linear-gradient(135deg, #ff4757, #ff3838);">🔄 リセット</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <input type="file" id="importInput" accept=".json" style="display:none;">
+
+    <!-- カスタムモーダル要素 -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal-content">
+            <h3 id="modalTitle"></h3>
+            <p id="modalMessage"></p>
+            <div class="modal-buttons" id="modalButtons">
+                <!-- ボタンはJSで動的に追加 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // アプリケーション状態
+        let appData = {
+            achievedDates: [],
+            totalXP: 0,
+            level: 1,
+            journal: {},
+            activities: [
+                '30分運動する', '本を20ページ読む', '瞑想する', '散歩に出る', '友達に連絡',
+                'クリエイティブな作業', '部屋を整理', '新しいスキル学習', '料理をする', '音楽を聴く'
+            ],
+            theme: 'dark',
+            goalDays: 30,
+            notifications: false,
+            streakProtections: 3, // ストリーク保護機能の追加
+            unlockedAchievements: [] // 実績のロック解除状態を追跡
+        };
+
+        // 名言集
+        const quotes = [
+            { text: "成功は準備と機会が出会うところに生まれる", author: "セネカ" },
+            { text: "自制心は筋肉のようなもの。使えば使うほど強くなる", author: "不明" },
+            { text: "意志の力は、繰り返しの力である", author: "不明" },
+            { text: "今日の自分は、昨日の選択の結果である", author: "不明" },
+            { text: "小さな一歩でも、正しい方向への一歩である", author: "不明" },
+            { text: "変化は決断から始まる", author: "トニー・ロビンズ" },
+            { text: "困難は成長の機会である", author: "不明" },
+            { text: "継続は力なり", author: "日本のことわざ" }
+        ];
+
+        // 実績システム
+        const achievements = [
+            { id: 'first_day', icon: '🌱', title: '第一歩', desc: '1日達成', days: 1 },
+            { id: 'week_warrior', icon: '⚡', title: '週の戦士', desc: '7日達成', days: 7 },
+            { id: 'month_master', icon: '🏅', title: '月の達人', desc: '30日達成', days: 30 },
+            { id: 'legend', icon: '👑', title: '伝説', desc: '100日達成', days: 100 },
+            { id: 'godlike', icon: '🏆', title: '神の域', desc: '365日達成', days: 365 },
+            { id: 'perfect_week', icon: '💎', title: '完璧な週', desc: '週7日連続', special: 'perfect_week' },
+            { id: 'comeback_king', icon: '🔄', title: '復活王', desc: '失敗後復活', special: 'comeback' },
+            { id: 'journal_keeper', icon: '✍️', title: '日記の達人', desc: '日記を10回記録', special: 'journal_count', count: 10 },
+            { id: 'activity_master', icon: '🏃', title: '活動の達人', desc: '代替活動を5つ追加', special: 'activity_count', count: 5 }
+        ];
+
+        // レベルシステム
+        const levels = [
+            { level: 1, xp: 0, title: '初心者' },
+            { level: 2, xp: 100, title: '挑戦者' },
+            { level: 3, xp: 300, title: '戦士' },
+            { level: 4, xp: 600, title: '達人' },
+            { level: 5, xp: 1000, title: 'マスター' },
+            { level: 6, xp: 1500, title: '伝説' },
+            { level: 7, xp: 2100, title: '神話' },
+            { level: 8, xp: 2800, title: '不死身' },
+            { level: 9, xp: 3600, title: '超越者' },
+            { level: 10, xp: 4500, title: '完全体' }
+        ];
+
+        // 現在の表示月
+        let viewYear, viewMonth;
+        let charts = {};
+
+        // 初期化
+        function init() {
+            loadData();
+            setupEventListeners();
+            setupTabs();
+            updateAll();
+            showDailyQuote();
+            
+            const today = new Date();
+            viewYear = today.getFullYear();
+            viewMonth = today.getMonth();
+            
+            renderCalendar();
+            initCharts();
+            applyTheme();
+
+            // 目標日数を設定に反映
+            document.getElementById('goalDays').value = appData.goalDays;
+            document.getElementById('enableNotifications').checked = appData.notifications;
+
+            // 通知権限の確認
+            if (appData.notifications && Notification.permission !== "granted") {
+                requestNotificationPermission();
+            }
+        }
+
+        // データ関連
+        function loadData() {
+            const saved = localStorage.getItem('enhancedAbstinenceData');
+            if (saved) {
+                try {
+                    // ロード時にデフォルト値をマージして、新しいプロパティが追加されても壊れないようにする
+                    const loadedData = JSON.parse(saved);
+                    appData = { ...appData, ...loadedData };
+                    // achievedDatesは日付文字列の配列なので、ソートしておく
+                    appData.achievedDates.sort((a, b) => new Date(a) - new Date(b));
+                } catch(e) {
+                    console.error('データ読み込みエラー:', e);
+                }
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('enhancedAbstinenceData', JSON.stringify(appData));
+        }
+
+        // イベントリスナー設定
+        function setupEventListeners() {
+            document.getElementById('markSuccessBtn').addEventListener('click', markTodaySuccess);
+            document.getElementById('emergencyBtn').addEventListener('click', toggleEmergencySection);
+            document.getElementById('breathingBtn').addEventListener('click', startBreathingGuide);
+            document.getElementById('motivationBtn').addEventListener('click', showMotivation);
+            document.getElementById('distractionBtn').addEventListener('click', suggestDistraction);
+            document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+            document.getElementById('prevMonth').addEventListener('click', () => changeMonth(-1));
+            document.getElementById('nextMonth').addEventListener('click', () => changeMonth(1));
+            document.getElementById('addActivityBtn').addEventListener('click', addActivity);
+            document.getElementById('saveJournalBtn').addEventListener('click', saveJournal);
+            document.getElementById('exportBtn').addEventListener('click', exportData);
+            document.getElementById('importBtn').addEventListener('click', () => document.getElementById('importInput').click());
+            document.getElementById('importInput').addEventListener('change', importData);
+            document.getElementById('resetBtn').addEventListener('click', resetAll);
+            
+            // 設定の変更を保存
+            document.getElementById('goalDays').addEventListener('change', (e) => {
+                appData.goalDays = parseInt(e.target.value, 10);
+                saveData();
+            });
+            document.getElementById('enableNotifications').addEventListener('change', (e) => {
+                appData.notifications = e.target.checked;
+                if (appData.notifications) {
+                    requestNotificationPermission();
+                }
+                saveData();
+            });
+
+            // Enterキーでの活動追加
+            document.getElementById('addActivityInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') addActivity();
+            });
+        }
+
+        // タブシステム
+        function setupTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabId = tab.getAttribute('data-tab');
+                    showTab(tabId);
+                });
+            });
+        }
+
+        function showTab(tabId) {
+            // タブのアクティブ状態を更新
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.toggle('active', tab.getAttribute('data-tab') === tabId);
+            });
+            
+            // コンテンツの表示を更新
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.toggle('active', content.id === tabId);
+            });
+            
+            // 特定のタブでの追加処理
+            if (tabId === 'analytics') {
+                setTimeout(updateCharts, 100); // DOM更新後にチャート更新
+            }
+            if (tabId === 'journal') {
+                loadTodayJournal();
+                renderJournalHistory();
+            }
+            if (tabId === 'achievements') {
+                renderAchievements();
+            }
+            if (tabId === 'activities') {
+                renderActivities();
+            }
+        }
+
+        // メイン更新関数
+        function updateAll() {
+            updateStats();
+            updateLevel();
+            renderAchievements();
+            renderActivities();
+            saveData();
+        }
+
+        // 統計更新
+        function updateStats() {
+            const streak = getCurrentStreak();
+            const longest = getLongestStreak();
+            const total = appData.achievedDates.length;
+            const rate = calculateSuccessRate();
+            
+            document.getElementById('currentStreak').textContent = streak;
+            document.getElementById('longestStreak').textContent = longest;
+            document.getElementById('totalDays').textContent = total;
+            document.getElementById('successRate').textContent = rate;
+        }
+
+        // レベル更新
+        function updateLevel() {
+            const currentLevel = calculateLevel();
+            const currentLevelData = levels[currentLevel - 1];
+            // 次のレベルデータがない場合は、現在のレベルのXPを最大XPとする
+            const nextLevelData = levels[currentLevel] || { level: currentLevel + 1, xp: appData.totalXP + 100 }; 
+            
+            const currentXP = appData.totalXP - currentLevelData.xp;
+            const maxXP = nextLevelData.xp - currentLevelData.xp;
+            const progress = Math.min((currentXP / maxXP) * 100, 100);
+            
+            document.getElementById('userLevel').textContent = currentLevel;
+            document.getElementById('currentXP').textContent = currentXP;
+            document.getElementById('maxXP').textContent = maxXP;
+            document.getElementById('xpProgress').style.width = progress + '%';
+            document.getElementById('levelTitle').textContent = currentLevelData.title;
+        }
+
+        // 今日の成功をマーク
+        function markTodaySuccess() {
+            const today = formatDate(new Date());
+            if (!appData.achievedDates.includes(today)) {
+                appData.achievedDates.push(today);
+                appData.totalXP += 10; // 経験値獲得
+                appData.achievedDates.sort((a, b) => new Date(a) - new Date(b)); // 日付をソート
+
+                // レベルアップチェック
+                const oldLevel = calculateLevel();
+                updateAll();
+                const newLevel = calculateLevel();
+                
+                if (newLevel > oldLevel) {
+                    showLevelUpMessage(newLevel);
+                }
+                
+                showSuccessMessage();
+                renderCalendar();
+                checkAchievements();
+                sendNotification('✅ 禁欲チャレンジ', '今日の禁欲を達成しました！素晴らしい！');
+            } else {
+                showModal('今日の達成', '今日は既に達成済みとして記録されています。');
+            }
+        }
+
+        // 成功メッセージ表示
+        function showSuccessMessage() {
+            const messages = [
+                '🎉 素晴らしい！その調子！',
+                '🔥 継続は力なり！',
+                '⭐ 今日もよく頑張った！',
+                '💪 君ならできる！',
+                '🌟 また一歩前進！',
+                '🏆 完璧だ！',
+                '✨ 自分を誇りに思って！'
+            ];
+            
+            const message = messages[Math.floor(Math.random() * messages.length)];
+            const messageEl = document.getElementById('congratsMessage');
+            messageEl.innerHTML = `<h2>${message}</h2><p>経験値 +10 獲得！</p>`;
+            messageEl.style.display = 'block';
+            messageEl.classList.add('fade-in');
+            
+            setTimeout(() => {
+                messageEl.style.display = 'none';
+                messageEl.classList.remove('fade-in');
+            }, 3000);
+        }
+
+        // レベルアップメッセージ
+        function showLevelUpMessage(level) {
+            const levelData = levels[level - 1];
+            showModal('🎉 レベルアップ！', `レベル ${level}: ${levelData.title}\n\nおめでとうございます！`);
+        }
+
+        // 緊急サポート
+        function toggleEmergencySection() {
+            const section = document.getElementById('emergencySection');
+            section.classList.toggle('hidden');
+        }
+
+        function startBreathingGuide() {
+            let count = 0;
+            const breathingSteps = ['吸って...', '止めて...', '吐いて...', '止めて...'];
+            const durations = [4000, 1000, 4000, 1000]; // ミリ秒
+            
+            function nextStep() {
+                if (count < 20) { // 5回繰り返し
+                    const stepIndex = count % 4;
+                    showModal('🫁 深呼吸ガイド', `${breathingSteps[stepIndex]} (${Math.floor(count/4) + 1}/5)`);
+                    setTimeout(nextStep, durations[stepIndex]);
+                    count++;
+                } else {
+                    showModal('🌟 深呼吸完了！', '落ち着きましたか？');
+                }
+            }
+            
+            showModal('🫁 深呼吸ガイドを開始します', '指示に従って呼吸してください。');
+            setTimeout(nextStep, 1500); // モーダル表示後に開始
+        }
+
+        function showMotivation() {
+            const motivations = [
+                '🎯 あなたの目標を思い出してください！\n今まで積み重ねてきた努力を無駄にしないで！',
+                '💪 この瞬間の誘惑は一時的です。\n後で必ず後悔することを知っているはずです。',
+                '🌟 今日を乗り切れば、明日はもっと強くなれます！',
+                '🏆 あなたは既に' + getCurrentStreak() + '日も継続しています。素晴らしい記録です！',
+                '🔥 この挑戦を通して、あなたは本当の強さを手に入れています。',
+                '⭐ 未来の自分があなたに感謝する日が来ます。今頑張って！'
+            ];
+            
+            const motivation = motivations[Math.floor(Math.random() * motivations.length)];
+            showModal('💪 モチベーション補給', motivation);
+        }
+
+        function suggestDistraction() {
+            if (appData.activities.length === 0) {
+                showModal('代替活動', '代替活動を追加してください！');
+                showTab('activities');
+                return;
+            }
+            
+            const activity = appData.activities[Math.floor(Math.random() * appData.activities.length)];
+            showModal('💡 気分転換', `今すぐこれをやってみましょう：\n\n"${activity}"\n\n5分だけでも始めてみてください！`);
+        }
+
+        // 日記機能
+        function loadTodayJournal() {
+            const today = formatDate(new Date());
+            const entry = appData.journal[today] || '';
+            document.getElementById('journalEntry').value = entry;
+        }
+
+        function saveJournal() {
+            const today = formatDate(new Date());
+            const entry = document.getElementById('journalEntry').value.trim();
+            
+            if (entry) {
+                appData.journal[today] = entry;
+                saveData();
+                showModal('📔 日記', '日記を保存しました！');
+                renderJournalHistory();
+                checkAchievements(); // 日記保存時にも実績チェック
+            } else {
+                showModal('📔 日記', '日記が空です。何か入力してください。');
+            }
+        }
+
+        function renderJournalHistory() {
+            const history = document.getElementById('journalHistory');
+            const entries = Object.entries(appData.journal)
+                .sort(([a], [b]) => new Date(b) - new Date(a))
+                .slice(0, 10); // 最新10件
+            
+            if (entries.length === 0) {
+                history.innerHTML = '<p style="opacity: 0.6;">まだ日記がありません</p>';
+                return;
+            }
+            
+            history.innerHTML = entries.map(([date, entry]) => `
+                <div style="border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 1em; margin: 0.5em 0;">
+                    <strong>${formatDateJapanese(parseDate(date))}</strong>
+                    <p style="margin: 0.5em 0; opacity: 0.9;">${entry}</p>
+                </div>
+            `).join('');
+        }
+
+        // 代替活動
+        function addActivity() {
+            const input = document.getElementById('addActivityInput');
+            const activity = input.value.trim();
+            
+            if (activity && !appData.activities.includes(activity)) {
+                appData.activities.push(activity);
+                input.value = '';
+                saveData();
+                renderActivities();
+                checkAchievements(); // 活動追加時にも実績チェック
+            } else if (!activity) {
+                showModal('活動追加', '活動名を入力してください。');
+            } else {
+                showModal('活動追加', 'その活動は既に追加されています。');
+            }
+        }
+
+        function renderActivities() {
+            const container = document.getElementById('activitiesList');
+            
+            if (appData.activities.length === 0) {
+                container.innerHTML = '<p style="opacity: 0.6;">活動を追加してください</p>';
+                return;
+            }
+            
+            // シャッフルして表示
+            const shuffled = [...appData.activities].sort(() => Math.random() - 0.5);
+            
+            container.innerHTML = shuffled.map((activity, index) => `
+                <div style="display: flex; justify-content: space-between; align-items: center; padding: 0.8em; margin: 0.5em 0; background: rgba(255,255,255,0.05); border-radius: 10px; border: 1px solid rgba(255,255,255,0.1);">
+                    <span>${activity}</span>
+                    <button class="btn" style="padding: 0.3em 0.8em; font-size: 0.8em;" onclick="removeActivity('${activity}')">削除</button>
+                </div>
+            `).join('');
+        }
+
+        function removeActivity(activity) {
+            showConfirm('活動の削除', `'${activity}' を削除してもよろしいですか？`, () => {
+                const index = appData.activities.indexOf(activity);
+                if (index > -1) {
+                    appData.activities.splice(index, 1);
+                    saveData();
+                    renderActivities();
+                }
+            });
+        }
+
+        // 実績システム
+        function checkAchievements() {
+            const streak = getCurrentStreak();
+            const longest = getLongestStreak();
+            
+            achievements.forEach(achievement => {
+                if (!hasAchievement(achievement.id)) {
+                    let unlocked = false;
+                    
+                    if (achievement.days && longest >= achievement.days) {
+                        unlocked = true;
+                    } else if (achievement.special === 'perfect_week' && checkPerfectWeek()) {
+                        unlocked = true;
+                    } else if (achievement.special === 'comeback' && checkComeback()) {
+                        unlocked = true;
+                    } else if (achievement.special === 'journal_count' && Object.keys(appData.journal).length >= achievement.count) {
+                        unlocked = true;
+                    } else if (achievement.special === 'activity_count' && appData.activities.length >= achievement.count) {
+                        unlocked = true;
+                    }
+                    
+                    if (unlocked) {
+                        unlockAchievement(achievement.id);
+                    }
+                }
+            });
+        }
+
+        function hasAchievement(id) {
+            return appData.unlockedAchievements && appData.unlockedAchievements.includes(id);
+        }
+
+        function unlockAchievement(id) {
+            if (!appData.unlockedAchievements) appData.unlockedAchievements = [];
+            appData.unlockedAchievements.push(id);
+            
+            const achievement = achievements.find(a => a.id === id);
+            appData.totalXP += 50; // 実績でボーナスXP
+            
+            setTimeout(() => {
+                showModal('🏆 実績解除！', `${achievement.icon} ${achievement.title}\n${achievement.desc}\n\n経験値 +50 獲得！`);
+            }, 500);
+            
+            saveData();
+            updateLevel();
+        }
+
+        function renderAchievements() {
+            const grid = document.getElementById('achievementsGrid');
+            
+            grid.innerHTML = achievements.map(achievement => {
+                const unlocked = hasAchievement(achievement.id);
+                const progress = getAchievementProgress(achievement);
+                
+                return `
+                    <div class="achievement ${unlocked ? 'unlocked' : ''}" title="${achievement.desc}${progress ? ' - ' + progress : ''}">
+                        <div class="achievement-icon">${unlocked ? achievement.icon : '🔒'}</div>
+                        <div class="achievement-title">${achievement.title}</div>
+                        ${progress ? `<div style="font-size: 0.7em; opacity: 0.8;">${progress}</div>` : ''}
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function getAchievementProgress(achievement) {
+            if (achievement.days) {
+                const current = getLongestStreak();
+                return current >= achievement.days ? '達成済み' : `${current}/${achievement.days}`;
+            } else if (achievement.special === 'journal_count') {
+                const current = Object.keys(appData.journal).length;
+                return current >= achievement.count ? '達成済み' : `${current}/${achievement.count}`;
+            } else if (achievement.special === 'activity_count') {
+                const current = appData.activities.length;
+                return current >= achievement.count ? '達成済み' : `${current}/${achievement.count}`;
+            }
+            return '';
+        }
+
+        // カレンダー
+        function renderCalendar() {
+            const firstDay = new Date(viewYear, viewMonth, 1);
+            const lastDay = new Date(viewYear, viewMonth + 1, 0);
+            const startDay = firstDay.getDay(); // 0:日, 1:月, ..., 6:土
+            
+            document.getElementById('monthYear').textContent = `${viewYear}年${viewMonth + 1}月`;
+            
+            let html = '<tr><th>日</th><th>月</th><th>火</th><th>水</th><th>木</th><th>金</th><th>土</th></tr>';
+            
+            let date = 1;
+            for (let week = 0; week < 6; week++) {
+                html += '<tr>';
+                for (let day = 0; day < 7; day++) {
+                    if (week === 0 && day < startDay) {
+                        html += '<td></td>';
+                    } else if (date > lastDay.getDate()) {
+                        html += '<td></td>';
+                    } else {
+                        const currentDate = new Date(viewYear, viewMonth, date);
+                        const dateKey = formatDate(currentDate);
+                        const isToday = dateKey === formatDate(new Date());
+                        const isAchieved = appData.achievedDates.includes(dateKey);
+                        
+                        let classes = [];
+                        if (isToday) classes.push('today');
+                        if (isAchieved) classes.push('achieved');
+                        
+                        html += `<td class="${classes.join(' ')}" onclick="toggleDate('${dateKey}')">${date}</td>`;
+                        date++;
+                    }
+                }
+                html += '</tr>';
+                if (date > lastDay.getDate()) break;
+            }
+            
+            document.getElementById('calendarTable').innerHTML = html;
+        }
+
+        function changeMonth(delta) {
+            viewMonth += delta;
+            if (viewMonth < 0) {
+                viewYear--;
+                viewMonth = 11;
+            } else if (viewMonth > 11) {
+                viewYear++;
+                viewMonth = 0;
+            }
+            renderCalendar();
+        }
+
+        function toggleDate(dateKey) {
+            // 今日の日付以外はトグル可能にする
+            const today = formatDate(new Date());
+            if (dateKey === today) {
+                showModal('日付の変更', '今日の達成状況は「今日達成！」ボタンで記録してください。');
+                return;
+            }
+
+            showConfirm('日付の変更', `${dateKey} の達成状況を切り替えますか？`, () => {
+                const index = appData.achievedDates.indexOf(dateKey);
+                if (index >= 0) {
+                    appData.achievedDates.splice(index, 1);
+                    appData.totalXP = Math.max(0, appData.totalXP - 10);
+                } else {
+                    appData.achievedDates.push(dateKey);
+                    appData.totalXP += 10;
+                }
+                
+                appData.achievedDates.sort((a, b) => new Date(a) - new Date(b)); // ソート
+                updateAll();
+                renderCalendar();
+                checkAchievements();
+            });
+        }
+
+        // チャート機能
+        function initCharts() {
+            // 月別成功率チャート
+            const monthlyCtx = document.getElementById('monthlyChart').getContext('2d');
+            charts.monthly = new Chart(monthlyCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: '月別成功率 (%)',
+                        data: [],
+                        borderColor: 'rgb(102, 126, 234)',
+                        backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                        tension: 0.4,
+                        fill: true
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: getChartTextColor() } }
+                    },
+                    scales: {
+                        x: { ticks: { color: getChartTextColor() }, grid: { color: getChartGridColor() } },
+                        y: { 
+                            ticks: { color: getChartTextColor(), callback: function(value) { return value + '%'; } }, 
+                            grid: { color: getChartGridColor() },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // 曜日別成功率チャート
+            const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+            charts.weekly = new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['日', '月', '火', '水', '木', '金', '土'],
+                    datasets: [{
+                        label: '曜日別成功率 (%)',
+                        data: [],
+                        backgroundColor: [
+                            'rgba(255, 99, 132, 0.6)', // 日
+                            'rgba(54, 162, 235, 0.6)', // 月
+                            'rgba(255, 206, 86, 0.6)', // 火
+                            'rgba(75, 192, 192, 0.6)', // 水
+                            'rgba(153, 102, 255, 0.6)', // 木
+                            'rgba(255, 159, 64, 0.6)', // 金
+                            'rgba(199, 199, 199, 0.6)'  // 土
+                        ],
+                        borderColor: [
+                            'rgba(255, 99, 132, 1)',
+                            'rgba(54, 162, 235, 1)',
+                            'rgba(255, 206, 86, 1)',
+                            'rgba(75, 192, 192, 1)',
+                            'rgba(153, 102, 255, 1)',
+                            'rgba(255, 159, 64, 1)',
+                            'rgba(199, 199, 199, 1)'
+                        ],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { labels: { color: getChartTextColor() } }
+                    },
+                    scales: {
+                        x: { ticks: { color: getChartTextColor() }, grid: { color: getChartGridColor() } },
+                        y: { 
+                            ticks: { color: getChartTextColor(), callback: function(value) { return value + '%'; } }, 
+                            grid: { color: getChartGridColor() },
+                            min: 0,
+                            max: 100
+                        }
+                    }
+                }
+            });
+            updateCharts(); // 初期データでチャートを更新
+        }
+
+        function updateCharts() {
+            // 月別成功率データの計算
+            const monthlyData = calculateMonthlySuccessRates();
+            charts.monthly.data.labels = monthlyData.labels;
+            charts.monthly.data.datasets[0].data = monthlyData.data;
+            charts.monthly.update();
+
+            // 曜日別成功率データの計算
+            const weeklyData = calculateWeeklySuccessRates();
+            charts.weekly.data.datasets[0].data = weeklyData;
+            charts.weekly.update();
+
+            // チャートのテーマを適用
+            charts.monthly.options.plugins.legend.labels.color = getChartTextColor();
+            charts.monthly.options.scales.x.ticks.color = getChartTextColor();
+            charts.monthly.options.scales.y.ticks.color = getChartTextColor();
+            charts.monthly.options.scales.x.grid.color = getChartGridColor();
+            charts.monthly.options.scales.y.grid.color = getChartGridColor();
+            charts.monthly.update();
+
+            charts.weekly.options.plugins.legend.labels.color = getChartTextColor();
+            charts.weekly.options.scales.x.ticks.color = getChartTextColor();
+            charts.weekly.options.scales.y.ticks.color = getChartTextColor();
+            charts.weekly.options.scales.x.grid.color = getChartGridColor();
+            charts.weekly.options.scales.y.grid.color = getChartGridColor();
+            charts.weekly.update();
+        }
+
+        function getChartTextColor() {
+            return appData.theme === 'dark' ? '#ddd' : '#333';
+        }
+
+        function getChartGridColor() {
+            return appData.theme === 'dark' ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)';
+        }
+
+        // ヘルパー関数
+        function formatDate(date) {
+            const y = date.getFullYear();
+            const m = (date.getMonth() + 1).toString().padStart(2, '0');
+            const d = date.getDate().toString().padStart(2, '0');
+            return `${y}-${m}-${d}`;
+        }
+
+        function parseDate(dateString) {
+            const [y, m, d] = dateString.split('-').map(Number);
+            return new Date(y, m - 1, d);
+        }
+
+        function formatDateJapanese(date) {
+            const y = date.getFullYear();
+            const m = date.getMonth() + 1;
+            const d = date.getDate();
+            const dayOfWeek = ['日', '月', '火', '水', '木', '金', '土'][date.getDay()];
+            return `${y}年${m}月${d}日(${dayOfWeek})`;
+        }
+
+        function getDaysBetween(d1, d2) {
+            const date1 = new Date(d1.getFullYear(), d1.getMonth(), d1.getDate());
+            const date2 = new Date(d2.getFullYear(), d2.getMonth(), d2.getDate());
+            const diffTime = Math.abs(date2 - date1);
+            return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        }
+
+        // ストリーク計算
+        function getCurrentStreak() {
+            if (appData.achievedDates.length === 0) return 0;
+
+            let streak = 0;
+            let currentDate = new Date();
+            let lastAchievedDate = parseDate(appData.achievedDates[appData.achievedDates.length - 1]);
+
+            // 今日の日付が達成済みでない、かつ昨日も達成済みでない場合、ストリークは0
+            if (formatDate(currentDate) !== formatDate(lastAchievedDate) && getDaysBetween(currentDate, lastAchievedDate) > 1) {
+                return 0;
+            }
+
+            // 今日が達成済み、または昨日が達成済みの場合、そこから遡ってストリークを計算
+            let tempDate = new Date(lastAchievedDate);
+            for (let i = appData.achievedDates.length - 1; i >= 0; i--) {
+                const date = parseDate(appData.achievedDates[i]);
+                if (formatDate(date) === formatDate(tempDate)) {
+                    streak++;
+                    tempDate.setDate(tempDate.getDate() - 1); // 前日へ
+                } else if (getDaysBetween(date, tempDate) === 0) { // 同じ日付が複数あった場合（ありえないが念のため）
+                    continue;
+                } else {
+                    break; // 連続が途切れた
+                }
+            }
+            return streak;
+        }
+
+        function getLongestStreak() {
+            if (appData.achievedDates.length === 0) return 0;
+
+            let maxStreak = 0;
+            let currentStreak = 0;
+            
+            // achievedDatesはソートされている前提
+            for (let i = 0; i < appData.achievedDates.length; i++) {
+                if (i === 0) {
+                    currentStreak = 1;
+                } else {
+                    const prevDate = parseDate(appData.achievedDates[i - 1]);
+                    const currentDate = parseDate(appData.achievedDates[i]);
+                    if (getDaysBetween(prevDate, currentDate) === 1) {
+                        currentStreak++;
+                    } else if (getDaysBetween(prevDate, currentDate) === 0) { // 同じ日付はスキップ
+                        continue;
+                    } else {
+                        maxStreak = Math.max(maxStreak, currentStreak);
+                        currentStreak = 1;
+                    }
+                }
+                maxStreak = Math.max(maxStreak, currentStreak); // ループの最後に更新
+            }
+            return maxStreak;
+        }
+
+        function calculateSuccessRate() {
+            if (appData.achievedDates.length === 0) return 0;
+
+            // アプリ開始日を特定
+            const firstDate = parseDate(appData.achievedDates[0]);
+            const today = new Date();
+            const totalPossibleDays = getDaysBetween(firstDate, today) + 1; // 開始日から今日までの総日数
+
+            return ((appData.achievedDates.length / totalPossibleDays) * 100).toFixed(1);
+        }
+
+        function calculateLevel() {
+            let currentLevel = 1;
+            for (let i = 0; i < levels.length; i++) {
+                if (appData.totalXP >= levels[i].xp) {
+                    currentLevel = levels[i].level;
+                } else {
+                    break;
+                }
+            }
+            return currentLevel;
+        }
+
+        // 実績の特殊条件チェック
+        function checkPerfectWeek() {
+            if (appData.achievedDates.length < 7) return false;
+
+            const sortedDates = [...appData.achievedDates].map(d => new Date(d)).sort((a, b) => b - a); // 最新順にソート
+
+            for (let i = 0; i <= sortedDates.length - 7; i++) {
+                let isPerfect = true;
+                for (let j = 0; j < 7; j++) {
+                    const dateToCheck = new Date(sortedDates[i]);
+                    dateToCheck.setDate(dateToCheck.getDate() - j); // 遡る
+                    if (!appData.achievedDates.includes(formatDate(dateToCheck))) {
+                        isPerfect = false;
+                        break;
+                    }
+                }
+                if (isPerfect) return true;
+            }
+            return false;
+        }
+
+        function checkComeback() {
+            // 失敗後復活のロジックは、例えば「ストリークが0になった後、再度1日達成した」などで判定できます。
+            // ここでは、直近の達成日が過去にストリークが途切れた後に記録された場合を簡易的に判定します。
+            // より厳密にするには、過去のストリーク履歴を保存する必要があります。
+            if (appData.achievedDates.length < 2) return false;
+
+            const sortedDates = [...appData.achievedDates].map(d => new Date(d)).sort((a, b) => a - b); // 古い順にソート
+
+            for (let i = 1; i < sortedDates.length; i++) {
+                const prevDate = sortedDates[i - 1];
+                const currentDate = sortedDates[i];
+                // 2日以上間が空いていたら、ストリークが途切れたとみなす
+                if (getDaysBetween(prevDate, currentDate) > 1) {
+                    return true; // 途切れた後に再開した
+                }
+            }
+            return false;
+        }
+
+
+        function calculateMonthlySuccessRates() {
+            const monthlyStats = {}; // { 'YYYY-MM': { totalDays: 0, achievedDays: 0 } }
+
+            // データのある最初の月から現在の月までを対象
+            let startDate = appData.achievedDates.length > 0 ? parseDate(appData.achievedDates[0]) : new Date();
+            let endDate = new Date();
+
+            let currentMonth = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+
+            while (currentMonth <= endDate) {
+                const yearMonth = `${currentMonth.getFullYear()}-${(currentMonth.getMonth() + 1).toString().padStart(2, '0')}`;
+                monthlyStats[yearMonth] = { totalDays: 0, achievedDays: 0 };
+                currentMonth.setMonth(currentMonth.getMonth() + 1);
+            }
+
+            // 各月の総日数と達成日数を計算
+            for (const dateStr of appData.achievedDates) {
+                const date = parseDate(dateStr);
+                const yearMonth = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+                if (monthlyStats[yearMonth]) {
+                    monthlyStats[yearMonth].achievedDays++;
+                }
+            }
+
+            // 各月の総日数を計算
+            for (const monthKey in monthlyStats) {
+                const [year, month] = monthKey.split('-').map(Number);
+                const daysInMonth = new Date(year, month, 0).getDate();
+                monthlyStats[monthKey].totalDays = daysInMonth;
+            }
+
+            // 現在の月は今日までの日数で計算
+            const currentYearMonth = `${endDate.getFullYear()}-${(endDate.getMonth() + 1).toString().padStart(2, '0')}`;
+            if (monthlyStats[currentYearMonth]) {
+                monthlyStats[currentYearMonth].totalDays = endDate.getDate(); // 今月は今日までの日数
+            }
+
+            const labels = [];
+            const data = [];
+
+            // 月をソートしてチャートデータを作成
+            Object.keys(monthlyStats).sort().forEach(monthKey => {
+                labels.push(monthKey);
+                const stats = monthlyStats[monthKey];
+                const rate = stats.totalDays > 0 ? ((stats.achievedDays / stats.totalDays) * 100).toFixed(1) : 0;
+                data.push(rate);
+            });
+
+            return { labels, data };
+        }
+
+        function calculateWeeklySuccessRates() {
+            const weeklyStats = new Array(7).fill(0).map(() => ({ total: 0, achieved: 0 })); // 日-土
+
+            for (const dateStr of appData.achievedDates) {
+                const date = parseDate(dateStr);
+                const dayOfWeek = date.getDay(); // 0:日, 1:月, ..., 6:土
+                weeklyStats[dayOfWeek].achieved++;
+            }
+
+            // 全期間の各曜日の総日数を計算
+            if (appData.achievedDates.length > 0) {
+                const firstDate = parseDate(appData.achievedDates[0]);
+                const today = new Date();
+                let tempDate = new Date(firstDate);
+
+                while (tempDate <= today) {
+                    const dayOfWeek = tempDate.getDay();
+                    weeklyStats[dayOfWeek].total++;
+                    tempDate.setDate(tempDate.getDate() + 1);
+                }
+            } else { // データがない場合、過去7日間の曜日をカウント
+                const today = new Date();
+                for (let i = 0; i < 7; i++) {
+                    const tempDate = new Date(today);
+                    tempDate.setDate(today.getDate() - i);
+                    const dayOfWeek = tempDate.getDay();
+                    weeklyStats[dayOfWeek].total++;
+                }
+            }
+
+
+            const rates = weeklyStats.map(stats => {
+                return stats.total > 0 ? ((stats.achieved / stats.total) * 100).toFixed(1) : 0;
+            });
+
+            return rates;
+        }
+
+
+        // テーマ切り替え
+        function toggleTheme() {
+            appData.theme = appData.theme === 'dark' ? 'light' : 'dark';
+            applyTheme();
+            saveData();
+            updateCharts(); // チャートのテキスト色を更新するために再描画
+        }
+
+        function applyTheme() {
+            document.body.classList.toggle('light-mode', appData.theme === 'light');
+            document.getElementById('themeToggle').textContent = appData.theme === 'dark' ? '🌓 テーマ切替' : '☀️ テーマ切替';
+        }
+
+        // 今日の名言表示
+        function showDailyQuote() {
+            const today = new Date();
+            const dayOfYear = Math.floor((today - new Date(today.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const quoteIndex = dayOfYear % quotes.length;
+            const quote = quotes[quoteIndex];
+            document.getElementById('quoteText').textContent = `"${quote.text}"`;
+            document.getElementById('quoteAuthor').textContent = `- ${quote.author}`;
+        }
+
+        // データエクスポート/インポート
+        function exportData() {
+            const dataStr = JSON.stringify(appData, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'abstinence_challenge_data.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+            showModal('データエクスポート', 'データがエクスポートされました！');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) {
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    // 既存のデータとマージするか、完全に置き換えるか選択肢を与えることも可能
+                    showConfirm('データインポート', '現在のデータをインポートしたデータで上書きしますか？', () => {
+                        appData = { ...appData, ...importedData }; // 新しいデータで上書き
+                        appData.achievedDates.sort((a, b) => new Date(a) - new Date(b)); // 日付をソート
+                        saveData();
+                        init(); // アプリを再初期化してUIを更新
+                        showModal('データインポート', 'データが正常にインポートされました！');
+                    });
+                } catch (error) {
+                    showModal('データインポートエラー', 'JSONファイルの読み込みに失敗しました。ファイルが破損しているか、形式が正しくありません。');
+                    console.error('データインポートエラー:', error);
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // 全データリセット
+        function resetAll() {
+            showConfirm('データリセット', '全てのデータをリセットしてもよろしいですか？この操作は元に戻せません。', () => {
+                localStorage.removeItem('enhancedAbstinenceData');
+                appData = {
+                    achievedDates: [],
+                    totalXP: 0,
+                    level: 1,
+                    journal: {},
+                    activities: [
+                        '30分運動する', '本を20ページ読む', '瞑想する', '散歩に出る', '友達に連絡',
+                        'クリエイティブな作業', '部屋を整理', '新しいスキル学習', '料理をする', '音楽を聴く'
+                    ],
+                    theme: 'dark',
+                    goalDays: 30,
+                    notifications: false,
+                    streakProtections: 3,
+                    unlockedAchievements: []
+                };
+                init();
+                showModal('データリセット', '全てのデータがリセットされました。');
+            });
+        }
+
+        // カスタムモーダル関数
+        function showModal(title, message, callback = null) {
+            const modalOverlay = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalButtons = document.getElementById('modalButtons');
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButtons.innerHTML = ''; // ボタンをクリア
+
+            const okButton = document.createElement('button');
+            okButton.textContent = 'OK';
+            okButton.classList.add('btn');
+            okButton.onclick = () => {
+                modalOverlay.classList.remove('visible');
+                if (callback) callback();
+            };
+            modalButtons.appendChild(okButton);
+
+            modalOverlay.classList.add('visible');
+        }
+
+        function showConfirm(title, message, onConfirm, onCancel = null) {
+            const modalOverlay = document.getElementById('customModal');
+            const modalTitle = document.getElementById('modalTitle');
+            const modalMessage = document.getElementById('modalMessage');
+            const modalButtons = document.getElementById('modalButtons');
+
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalButtons.innerHTML = ''; // ボタンをクリア
+
+            const confirmButton = document.createElement('button');
+            confirmButton.textContent = 'はい';
+            confirmButton.classList.add('btn', 'primary');
+            confirmButton.onclick = () => {
+                modalOverlay.classList.remove('visible');
+                if (onConfirm) onConfirm();
+            };
+            modalButtons.appendChild(confirmButton);
+
+            const cancelButton = document.createElement('button');
+            cancelButton.textContent = 'いいえ';
+            cancelButton.classList.add('btn');
+            cancelButton.onclick = () => {
+                modalOverlay.classList.remove('visible');
+                if (onCancel) onCancel();
+            };
+            modalButtons.appendChild(cancelButton);
+
+            modalOverlay.classList.add('visible');
+        }
+
+        // 通知機能
+        function requestNotificationPermission() {
+            if (!("Notification" in window)) {
+                showModal('通知', 'このブラウザは通知に対応していません。');
+                return;
+            }
+
+            if (Notification.permission === "granted") {
+                console.log("通知は既に許可されています。");
+            } else if (Notification.permission !== "denied") {
+                Notification.requestPermission().then(permission => {
+                    if (permission === "granted") {
+                        showModal('通知', '通知が有効になりました！');
+                        appData.notifications = true;
+                        saveData();
+                    } else {
+                        showModal('通知', '通知は拒否されました。設定からいつでも有効にできます。');
+                        appData.notifications = false;
+                        document.getElementById('enableNotifications').checked = false;
+                        saveData();
+                    }
+                });
+            } else {
+                showModal('通知', '通知がブロックされています。ブラウザの設定から許可してください。');
+                appData.notifications = false;
+                document.getElementById('enableNotifications').checked = false;
+                saveData();
+            }
+        }
+
+        function sendNotification(title, body) {
+            if (appData.notifications && Notification.permission === "granted") {
+                new Notification(title, { body: body, icon: 'https://placehold.co/64x64/FF6B6B/FFFFFF?text=🔥' });
+            }
+        }
+
+        // アプリ起動
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
